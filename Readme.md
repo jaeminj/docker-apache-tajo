@@ -1,4 +1,4 @@
-# Docker Apache TAJO Python Client Testing    
+# Docker Apache TAJO Ubuntu 14.04
 
 [Origianl Project from sktelecom/ubuntu-14.10-hdw](https://registry.hub.docker.com/u/sktelecom/ubuntu14.10-hdw/) 
 

@@ -1,11 +1,12 @@
-# Apache Tajo on the docker and weaver 
+# Apache Tajo on the docker and weaver (Not Tested)
+
 ## Common Install
-## Docker install
+### Docker install
 
     wget -qO- https://get.docker.com/ | sh
     sudo usermod -aG docker ubuntu
 
-## weave overlay network install
+### weave overlay network install
 
     sudo wget -O /usr/local/bin/weave \
               https://raw.githubusercontent.com/zettio/weave/master/weaver/weave

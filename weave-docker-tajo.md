@@ -1,4 +1,6 @@
-# Apache Tajo on the docker and weaver (Not Tested)
+# Apache Tajo on the docker and weaver 
+
+(Attention: Not Tested this scenario, some config required to fix!)
 
 ## Common Install
 ### Docker install

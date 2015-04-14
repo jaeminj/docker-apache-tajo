@@ -1,5 +1,5 @@
 # Apache Tajo on the docker and weaver 
-
+## Common Install
 ## Docker install
 
     wget -qO- https://get.docker.com/ | sh
@@ -18,7 +18,7 @@
     ./docker-image-apache-tajo.sh build
 
 
-## host1 :: launch weave and run a docker container with weave
+## host1 :: launch weave and run a docker container for tajo worker with weave
 
 
     host1 # export WEAVE_PASSWORD=votmdnjem
@@ -27,13 +27,13 @@
 
 
 
-## host2 :: launch weave and run a docker container with weave
+## host2 :: launch weave and run a docker container for tajo worker with weave
 
     host2 # export WEAVE_PASSWORD=votmdnjem
     host2 # weave launch
     host1 # C=$(weave run 10.2.1.20/24 --name=tajow02 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
 
-## host2 :: launch weave and run a docker container with weave
+## host3 :: launch weave and run a docker container for tajo worker with weave
 
     
     host3 # export WEAVE_PASSWORD=votmdnjem

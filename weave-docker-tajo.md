@@ -65,3 +65,7 @@
     host0 # ./run-ipython-notebook.sh
     
     host0 # exit
+
+
+# After Testing, I'll make a fabfile for building apache tajo farm on the weave.
+

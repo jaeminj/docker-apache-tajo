@@ -129,6 +129,7 @@ COPY test-hive.sh /root/
 # tajo python client
 RUN pip install protobuf
 RUN pip install tajo-client
-COPY test.py test2.py test-python-tajo-client.py /root/
+COPY test.py test2.py test-python-tajo-client.sh /root/
 
+COPY hosts /root/hosts
 EXPOSE 22 7077 8020 8030 8031 8032 8033 8040 8042 8080 8088 8888 9200 9300 10000 26080 26081 50010 50020 50060 50070 50075 50090

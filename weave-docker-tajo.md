@@ -9,10 +9,10 @@
     sudo usermod -aG docker ubuntu
 
 ### weave overlay network install
-
     sudo wget -O /usr/local/bin/weave \
-              https://raw.githubusercontent.com/zettio/weave/master/weaver/weave
-              sudo chmod a+x /usr/local/bin/weave
+      https://github.com/weaveworks/weave/releases/download/latest_release/weave
+
+    sudo chmod a+x /usr/local/bin/weave
     
     apt-get install ethtool conntrack
 
@@ -26,7 +26,7 @@
 
     host1 # export WEAVE_PASSWORD=votmdnjem
     host1 # weave launch 
-    host1 # C=$(weave run 10.2.1.10/24 --name=tajow01 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
+    host1 # C=$(weave run 10.2.1.10/24 --name=worker1 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
 
 
 
@@ -34,14 +34,14 @@
 
     host2 # export WEAVE_PASSWORD=votmdnjem
     host2 # weave launch
-    host1 # C=$(weave run 10.2.1.20/24 --name=tajow02 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
+    host1 # C=$(weave run 10.2.1.20/24 --name=worker2 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
 
 ## host3 ::  for tajo worker with weave
 
     
     host3 # export WEAVE_PASSWORD=votmdnjem
     host3 # weave launch
-    host3 # C=$(weave run 10.2.1.30/24 --name=tajow03 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
+    host3 # C=$(weave run 10.2.1.30/24 --name=worker3 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )
 
 
 
@@ -50,7 +50,8 @@
     
     host0 # export WEAVE_PASSWORD=votmdnjem
     host0 # weave launch
-    host0 # C=$(weave run 10.2.1.1/24 --name=tajo -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh )
+    host0 # weave launch-dns 10.2.1.3/24
+    host0 # C=$(weave run 10.2.1.1/24 --name=tajo -h hnn-001-01 -d ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh )
     host0 # docker attach $C
     host0 # ping 10.2.1.10
     host0 # ping 10.2.1.20

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cp /root/hosts /etc/hosts
+
 service ssh start
 
 /root/sync-hosts.sh

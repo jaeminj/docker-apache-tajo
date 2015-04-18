@@ -6,8 +6,8 @@
 ## weave overlay network install
 
     sudo wget -O /usr/local/bin/weave \
-              https://raw.githubusercontent.com/zettio/weave/master/weaver/weave
-              sudo chmod a+x /usr/local/bin/weave
+         https://github.com/weaveworks/weave/releases/download/latest_release/weave
+    sudo chmod a+x /usr/local/bin/weave
     
     apt-get install ethtool conntrack
 

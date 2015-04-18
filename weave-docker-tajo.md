@@ -1,6 +1,10 @@
 # Apache Tajo on the docker and weaver 
 
-(Attention: Not Tested this scenario, some config required to fix!)
+
+*Refer src/run-weave-cluster.sh src/fabfile.py
+*This Document is depreated since 2015-04-18.
+
+
 
 ## Common Install
 ### Docker install

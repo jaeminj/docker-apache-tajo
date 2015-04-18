@@ -39,7 +39,8 @@ def reset():
     run("docker ps | awk '{print $1}' |  grep -v CON | while read cid ; do docker rm -f $cid ; done ") 
 
 
-@roles('worker', 'namenode')
+# @roles('worker', 'namenode')
+@roles('namenode')
 def common_install():
     run(" wget -qO- https://get.docker.com/ | sh ")
     run(" wget -O /usr/local/bin/weave \

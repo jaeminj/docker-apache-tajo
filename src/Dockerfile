@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 RUN apt-get install -y git unzip openssh-server openssh-client python-software-properties software-properties-common protobuf-compiler ipython ipython-notebook python-matplotlib python-pip  python-dev
-RUN pip install JayDeBeApi
+RUN pip install JayDeBeApi python-gflags
 
 RUN ssh-keygen -q -N "" -t rsa -f /root/.ssh/id_rsa
 RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys

@@ -1,58 +1,82 @@
-from fabric.api import env,run
+#from fabric.api import env,run,prompt
+from fabric.api import *
 
 env.user='root'
-env.password=''
+env.password=prompt('common ', env.user, ' password:')
 env.roledefs = {
-        'worker':[],
-        'namenode':[]
+        'worker':['115.68.184.118'],
+        'namenode':['115.68.184.135']
         }
 
-ip_addr_planning = 
-def get_ip_addr_planning():
-    if role -eq 'worker' :
+@roles('worker')
+def test():
+    run("ifconfig |grep 115")
+    print env.host_string
+    print str
+    print i
 
-    else if  role -eq 'namenode':
+@roles('namenode')
+def put_hosts():
+    hostfile_txt = """
+127.0.0.1   localhost
+172.2.1.1   hnn-001-01
+"""
+    for i  in range(0, len(env.roledefs['worker'])):
+        hostfile_txtline="hdw-001-0%d 172.2.1.1%d\n" %(i, i)
+        hostfile_txt += hostfile_txtline
     
-    
+    f = open("./hosts.fab", 'w')
+    f.write(hostfile_txt)
+    f.close()
+    local("cat ./hosts.fab")
+    run("ls /root/docker-apache-tajo/src")
+    put("./hosts.fab", "/root/docker-apache-tajo/src/hosts")
 
-@hosts('worker', 'namenode')
+
+@roles('worker', 'namenode')
+def reset():
+    run("weave stop")
+    run("docker ps | awk '{print $1}' |  grep -v CON | while read cid ; do docker rm -f $cid ; done ") 
+
+
+@roles('worker', 'namenode')
 def common_install():
-    """
-    wget -qO- https://get.docker.com/ | sh
-    sudo usermod -aG docker ubuntu
-    weave overlay network install
+    run(" wget -qO- https://get.docker.com/ | sh ")
+    run(" wget -O /usr/local/bin/weave \
+        https://github.com/weaveworks/weave/releases/download/latest_release/weave")
+    run("chmod a+x /usr/local/bin/weave")
+    run(" apt-get -qy install ethtool conntrack git")
+    run(" rm -rf docker-apache-tajo")
+    run(" git clone https://github.com/jaeminj/docker-apache-tajo.git")
+    with cd("docker-apache-tajo/src"):
+        run("./docker-image-apache-tajo.sh build")
+    run(" export WEAVE_PASSWORD=votmdnjem ")
+    run(" weave launch ")
+    
 
-    sudo wget -O /usr/local/bin/weave \
-              https://raw.githubusercontent.com/zettio/weave/master/weaver/weave
-              sudo chmod a+x /usr/local/bin/weave
 
-    apt-get install ethtool conntrack
-
-    git clone https://github.com/jaeminj/docker-apache-tajo.git
-    cd docker-apache-tajo/src ; 
-    ./docker-image-apache-tajo.sh build
-    """
-
-@hosts('workers')
+@roles('worker')
 def start_worker():
-    """
-    export WEAVE_PASSWORD=votmdnjem
-    weave launch 
-    C=$(weave run 10.2.1.10/24 --name=tajow01 -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/start.sh 
-    """
+    cmd = " weave connect " + env.roledefs['namenode'][0]
+    run( cmd )
+    i = env.roledefs['worker'].index(env.host_string)
+    cmd = "export C=$( HOST=hdw-001-0%d weave run 172.2.1.1%d/24 --name=$HOST -h $HOST --net='none' -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )" % ( i,  i )
+    run( cmd )
+    run(" echo $C ")
 
 
-@namenode('namenode')
+
+@roles('namenode')
 def start_namenode():
-    """
-    export WEAVE_PASSWORD=votmdnjem
-    weave launch
-    C=$(weave run 10.2.1.1/24 --name=tajo -h $HOST -d ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh )
-    """
+    run("export  C=$( HOST=hnn-001-01 weave run  172.2.1.1/24 --name=$HOSTNAME -h $HOSTNAME --net='none' -itd -v /root/docker-apache-tajo/src:/mnt  ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh ) " )
 
-@namenode('namenode')
-def check_tajo():
-    """
+
+@roles('namenode')
+def howto_tajo():
+    print "login your host ", env.roledefs['namenode'][0] , "."
+    print "execute the followings."
+
+    print """
     docker attach $C
     ping 10.2.1.10
     ping 10.2.1.20
@@ -70,10 +94,9 @@ def check_tajo():
 
 
 def build_apache_tajo_farm():
-    if len(env.hosts) < 1 :
-        local("echo none hosts")
     common_install()
-    start_workers()
+    push_hosts()
+    start_worker()
     start_namenode()
     check_tajo()
 

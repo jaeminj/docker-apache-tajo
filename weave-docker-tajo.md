@@ -1,8 +1,8 @@
 # Apache Tajo on the docker and weaver 
 
 
-*Refer src/run-weave-cluster.sh src/fabfile.py
-*This Document is depreated since 2015-04-18.
+* Refer src/run-weave-cluster.sh src/fabfile.py
+* This Document is depreated since 2015-04-18.
 
 
 

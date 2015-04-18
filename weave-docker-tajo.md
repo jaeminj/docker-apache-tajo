@@ -3,7 +3,9 @@
 
 * This Document has been depreated since 2015-04-18.
 * This current result, you can find in src/run-weave-cluster.sh src/fabfile.py.
-* I'm  working on checking. But, I've some improvement.
+** src/run-weave-cluster.sh  :it's working
+** src/fabfile.py : it has some problems to check.
+* I'm  working on checking. But, It's closed to end. 
 * After all, I'll fix this document with the final result.
 
 

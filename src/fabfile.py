@@ -15,7 +15,6 @@ def test():
     print str
     print i
 
-@roles('namenode')
 def put_hosts():
     hostfile_txt = """
 127.0.0.1   localhost
@@ -29,7 +28,6 @@ def put_hosts():
     f.write(hostfile_txt)
     f.close()
     local("cat ./hosts.fab")
-    run("ls /root/docker-apache-tajo/src")
     put("./hosts.fab", "/root/docker-apache-tajo/src/hosts")
 
 
@@ -37,6 +35,8 @@ def put_hosts():
 def reset():
     run("weave stop")
     run("docker ps | awk '{print $1}' |  grep -v CON | while read cid ; do docker rm -f $cid ; done ") 
+    put_hosts()
+    run("weave launch")
 
 
 # @roles('worker', 'namenode')
@@ -49,11 +49,12 @@ def common_install():
     run(" apt-get -qy install ethtool conntrack git")
     run(" rm -rf docker-apache-tajo")
     run(" git clone https://github.com/jaeminj/docker-apache-tajo.git")
-    with cd("docker-apache-tajo/src"):
-        run("./docker-image-apache-tajo.sh build")
+    put_hosts()
+    run("docker pull jaeminj/ubuntu-14.04-apache-tajo-0.10.0")
+    #with cd("docker-apache-tajo/src"):
+    #    run("./docker-image-apache-tajo.sh build")
     run(" export WEAVE_PASSWORD=votmdnjem ")
     run(" weave launch ")
-    
 
 
 @roles('worker')
@@ -61,7 +62,8 @@ def start_worker():
     cmd = " weave connect " + env.roledefs['namenode'][0]
     run( cmd )
     i = env.roledefs['worker'].index(env.host_string)
-    cmd = "export C=$( HOST=hdw-001-0%d weave run 172.2.1.1%d/24 --name=$HOST -h $HOST --net='none' -d ubuntu-14.04/tajo:0.10.0 /root/start.sh )" % ( i,  i )
+    host ="hdw-001-0%d" %  i 
+    cmd = "export C=$( weave run 172.2.1.1%d/24 --name=%s -h %s --net='none' -d -v /root/docker-apache-tajo/src/hosts:/root/hosts ubuntu-14.04/tajo:0.10.0 /root/start.sh )" % ( i, host,  host )
     run( cmd )
     run(" echo $C ")
 
@@ -69,7 +71,8 @@ def start_worker():
 
 @roles('namenode')
 def start_namenode():
-    run("export  C=$( HOST=hnn-001-01 weave run  172.2.1.1/24 --name=$HOSTNAME -h $HOSTNAME --net='none' -itd -v /root/docker-apache-tajo/src:/mnt  ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh ) " )
+    host = "hnn-001-01"
+    run("export  C=$( weave run  172.2.1.1/24 --name=%s -h %s --net='none' -itd -v /root/docker-apache-tajo/src/hosts:/root/hosts  ubuntu-14.04/tajo:0.10.0 /root/init-nn.sh ) " % ( host, host)  )
 
 
 @roles('namenode')

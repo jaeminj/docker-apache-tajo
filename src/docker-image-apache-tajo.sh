@@ -18,6 +18,9 @@ case $1 in
     remove)
         rmi
     ;;
+    push)
+        sudo docker login
+        sudo docker push jaeminj/ubuntu-14.04-apache-tajo-0.10.0:0.1 
     *)
         build
     ;;
